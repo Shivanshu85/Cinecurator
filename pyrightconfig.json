@@ -1,0 +1,12 @@
+{
+  "pythonVersion": "3.14",
+  "pythonPlatform": "Windows",
+  "pythonPath": "C:/Program Files/Python314/python.exe",
+  "extraPaths": [
+    "ml-service",
+    "C:/Users/tshiv/AppData/Roaming/Python/Python314/site-packages"
+  ],
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "none",
+  "reportMissingModuleSource": "none"
+}

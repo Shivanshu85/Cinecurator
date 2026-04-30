@@ -1,0 +1,87 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: "class",
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Stitch Design System — Cinematic Dark Palette
+        "surface-bright": "#393939",
+        "on-secondary-container": "#b5b5b5",
+        outline: "#af8782",
+        "on-background": "#e5e2e1",
+        secondary: "#c7c6c6",
+        "on-error-container": "#ffdad6",
+        "secondary-fixed-dim": "#c7c6c6",
+        "on-tertiary-fixed-variant": "#454747",
+        "on-tertiary-fixed": "#1a1c1c",
+        primary: "#ffb4aa",
+        "on-tertiary-container": "#f9f9f9",
+        "surface-container-highest": "#353534",
+        surface: "#131313",
+        "surface-container-high": "#2a2a2a",
+        "on-surface-variant": "#e9bcb6",
+        "primary-container": "#e50914",
+        "on-secondary": "#303031",
+        "on-primary-fixed": "#410001",
+        "on-secondary-fixed": "#1b1c1c",
+        "inverse-surface": "#e5e2e1",
+        "surface-tint": "#ffb4aa",
+        "inverse-primary": "#c0000c",
+        "on-primary-container": "#fff7f6",
+        "surface-variant": "#353534",
+        "error-container": "#93000a",
+        "tertiary-fixed-dim": "#c6c6c7",
+        background: "#131313",
+        "on-error": "#690005",
+        "outline-variant": "#5e3f3b",
+        "surface-dim": "#131313",
+        tertiary: "#c6c6c7",
+        "surface-container-low": "#1c1b1b",
+        "primary-fixed-dim": "#ffb4aa",
+        "secondary-fixed": "#e3e2e2",
+        "secondary-container": "#464747",
+        "on-tertiary": "#2f3131",
+        "surface-container": "#201f1f",
+        "tertiary-container": "#717373",
+        "on-primary-fixed-variant": "#930007",
+        "surface-container-lowest": "#0e0e0e",
+        "inverse-on-surface": "#313030",
+        error: "#ffb4ab",
+        "tertiary-fixed": "#e2e2e2",
+        "on-secondary-fixed-variant": "#464747",
+        "primary-fixed": "#ffdad5",
+        "on-primary": "#690003",
+        "on-surface": "#e5e2e1",
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem",
+        lg: "0.5rem",
+        xl: "0.75rem",
+        full: "9999px",
+      },
+      fontFamily: {
+        headline: ["var(--font-jakarta)", "Plus Jakarta Sans", "sans-serif"],
+        body: ["var(--font-inter)", "Inter", "sans-serif"],
+        label: ["var(--font-inter)", "Inter", "sans-serif"],
+      },
+      animation: {
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        shimmer: "shimmer 2s linear infinite",
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;

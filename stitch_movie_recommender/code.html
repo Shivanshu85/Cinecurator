@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inception Protocol - CineCurator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#e3e2e2",
+                      "secondary-container": "#464747",
+                      "surface-container": "#201f1f",
+                      "on-secondary-fixed-variant": "#464747",
+                      "surface-container-highest": "#353534",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "inverse-primary": "#c0000c",
+                      "inverse-surface": "#e5e2e1",
+                      "outline-variant": "#5e3f3b",
+                      "tertiary-container": "#717373",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "secondary": "#c7c6c6",
+                      "inverse-on-surface": "#313030",
+                      "surface-bright": "#393939",
+                      "on-secondary-container": "#b5b5b5",
+                      "on-surface": "#e5e2e1",
+                      "surface-container-low": "#1c1b1b",
+                      "on-error-container": "#ffdad6",
+                      "surface-tint": "#ffb4aa",
+                      "surface-container-high": "#2a2a2a",
+                      "tertiary": "#c6c6c7",
+                      "tertiary-fixed": "#e2e2e2",
+                      "secondary-fixed-dim": "#c7c6c6",
+                      "on-tertiary-container": "#f9f9f9",
+                      "on-secondary-fixed": "#1b1c1c",
+                      "on-primary": "#690003",
+                      "background": "#131313",
+                      "primary-fixed": "#ffdad5",
+                      "on-background": "#e5e2e1",
+                      "on-surface-variant": "#e9bcb6",
+                      "primary-container": "#e50914",
+                      "on-primary-fixed": "#410001",
+                      "primary": "#ffb4aa",
+                      "outline": "#af8782",
+                      "on-primary-fixed-variant": "#930007",
+                      "surface-container-lowest": "#0e0e0e",
+                      "surface-variant": "#353534",
+                      "on-tertiary": "#2f3131",
+                      "surface-dim": "#131313",
+                      "error": "#ffb4ab",
+                      "on-secondary": "#303031",
+                      "on-primary-container": "#fff7f6",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "primary-fixed-dim": "#ffb4aa",
+                      "surface": "#131313",
+                      "error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Plus Jakarta Sans"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hero-gradient {
+            background: linear-gradient(0deg, #131313 0%, rgba(19, 19, 19, 0.4) 50%, rgba(19, 19, 19, 0.8) 100%);
+        }
+        .glass-panel {
+            background: rgba(53, 53, 52, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-white">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#131313] flex justify-between items-center px-12 py-5 w-full shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
+<div class="text-2xl font-bold tracking-tight text-[#e50914] font-headline">CineCurator</div>
+<div class="hidden lg:flex items-center space-x-10 absolute left-1/2 -translate-x-1/2">
+<div class="relative">
+<a class="font-body text-[14px] font-semibold text-white transition-colors duration-300" href="#">Home</a>
+<div class="absolute -bottom-2 left-0 right-0 h-0.5 bg-[#e50914]"></div>
+</div>
+<a class="font-body text-[14px] font-medium text-white/70 hover:text-white transition-colors duration-300" href="#">Suggestions</a>
+<a class="font-body text-[14px] font-medium text-white/70 hover:text-white transition-colors duration-300" href="#">Genres</a>
+<a class="font-body text-[14px] font-medium text-white/70 hover:text-white transition-colors duration-300" href="#">Library</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-white/70">language</span>
+<span class="text-[13px] font-medium text-white/70">English</span>
+<span class="material-symbols-outlined text-[16px] text-white/70">arrow_drop_down</span>
+</button>
+<button class="bg-[#e50914] text-white px-5 py-1.5 rounded-md font-body font-bold text-[13px] hover:bg-[#ff0a16] transition-colors">
+                        Sign In
+                    </button>
+</div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative h-[921px] w-full overflow-hidden flex items-end pb-24">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="cinematic widescreen shot of a futuristic neon-lit city at night with blue and red lighting, rain falling, and deep atmospheric fog" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACHAH5N_ZP5qZBBPu7E2FLkNJ51GxcBRucyfqz2mlRnbkZA8PkEBHtmq7bfbZ0kptq7XF7f7uItAGoWh6yJMbFLQlufZfreWjBlFzbG3WvT3jAkJfwPAujpQqPdrWePEwQHN71SpcFlOplLdwnw75fv28hp8gSl99Ffks340gl3q-9GvpRsycL8FtzrljUPvitHH-Jlec6JuHE8zoi_lywSSOgXHrOr7_pOC16qoh9Qo0wsyg6B__sRbhXgurO75Z0RzM-HAdmsGO4" style=""/>
+<div class="absolute inset-0 hero-gradient"></div>
+</div>
+<div class="relative z-10 px-10 max-w-5xl">
+<div class="flex flex-wrap gap-3 mb-6">
+<span class="px-3 py-1 bg-secondary-container/50 text-on-surface-variant text-[10px] font-bold uppercase tracking-widest rounded-full backdrop-blur-md" style="">Sci-Fi</span>
+<span class="px-3 py-1 bg-secondary-container/50 text-on-surface-variant text-[10px] font-bold uppercase tracking-widest rounded-full backdrop-blur-md" style="">148 min</span>
+<span class="px-3 py-1 bg-primary-container text-white text-[10px] font-bold uppercase tracking-widest rounded-full" style="">Rating: 9.4</span>
+</div>
+<h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter mb-8 text-on-surface leading-none" style="">Inception Protocol</h1>
+<div class="flex flex-col md:flex-row gap-4">
+<button class="bg-primary-container text-on-primary-container px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all duration-200" style="">
+                        Watch Trailer
+                    </button>
+<button class="border border-outline-variant text-on-surface px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:bg-surface-container-high active:scale-95 transition-all duration-200" style="">
+                        Add to Library
+                    </button>
+</div>
+</div>
+</section>
+<!-- About Section -->
+<section class="mt-[100px] px-10 max-w-6xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+<div class="md:col-span-4 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover" data-alt="minimalist dark movie poster for Inception Protocol featuring a silhouette of a person standing against a massive circular light structure" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARigBi26NnNkpRFRXu-de5Cpbfwy8wH_ka9r92dsMxTzA91JV2a4ze4jiJIpi2KSziEvUHP_HSYYq5JMychyW5-NW-q1K3VrdxU8CrPHBqvCG3FstYQC-sq5MAQMchvNNEBlR_ZsMUrlmV3fz5F2alDLbOuHwxClKORa9nwv8TZwDaakMtfFfsqgsZ-oWekHvDPUyUoTU9P1Qw6cJR4TJXKqKV_kYOpc12gqDymN74lbNleeLsrvanBAFtWsE5DM9tpzhnzzfDm669" style=""/>
+</div>
+<div class="md:col-span-8 flex flex-col justify-center h-full">
+<h2 class="font-headline text-xs font-bold uppercase tracking-[0.3em] text-primary mb-6" style="">Synopsis</h2>
+<p class="text-on-surface-variant text-lg md:text-xl leading-relaxed font-light font-body" style="">
+                        In a near-future where consciousness can be digitized and transferred between vessels, a rogue detective is tasked with hunting down a 'Ghost Protocol'—a digital entity that has breached the securest neural network in the city. As the lines between physical reality and digital simulation blur, he discovers that his own memories may be part of the infiltration.
+                    </p>
+<div class="mt-12 flex gap-8">
+<div>
+<span class="block text-[10px] uppercase tracking-widest text-primary font-bold mb-1" style="">Release Date</span>
+<span class="text-on-surface font-medium" style="">Nov 24, 2024</span>
+</div>
+<div>
+<span class="block text-[10px] uppercase tracking-widest text-primary font-bold mb-1" style="">Production</span>
+<span class="text-on-surface font-medium" style="">CineCurator Originals</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Key Creative Crew -->
+<section class="mt-[100px] px-10">
+<div class="max-w-7xl mx-auto">
+<h2 class="font-headline text-xs font-bold uppercase tracking-[0.3em] text-primary mb-12 text-center" style="">Key Creative Crew</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+<!-- Crew Member 1 -->
+<div class="group">
+<div class="aspect-square rounded-full overflow-hidden mb-6 border-2 border-transparent group-hover:border-primary-container transition-all duration-500">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="professional portrait of a male director with a serious expression, sharp studio lighting on a dark grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIr4p74DIAELVV25l2ZMZQefRdnv-giImNhNd3s78gsRFLOOwzbMJG-gCtKoygUYmfJz86xXeA9kWPTawzr4YnMQuJuhXJeqL9K2vMey4FMhFMiaUdYDABuR_oYarR6mRp5yJ64D2eK0ACb0Vuty6PcIkFzm_ANalGbByQ0ZwY-r_7sfGEdRbL7NXEePgrQb8DdXdCwBlq7Cpzcu5VU-LOjAd4QE5Gv5XhsmzyhPgUybg7aEkcnxcqbVfEKRc2wPvWHBN44MkW5TnY" style=""/>
+</div>
+<div class="text-center">
+<h3 class="font-headline font-bold text-on-surface" style="">Elena Vasko</h3>
+<p class="text-on-surface-variant text-xs uppercase tracking-tighter mt-1 opacity-60" style="">Director</p>
+</div>
+</div>
+<!-- Crew Member 2 -->
+<div class="group">
+<div class="aspect-square rounded-full overflow-hidden mb-6 border-2 border-transparent group-hover:border-primary-container transition-all duration-500">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="creative portrait of a female screenwriter in a modern studio environment, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWoM0W6pvFeC1L66fvoRO1O1S41UFHdwAZMAT1p0hufMk26MII1BlFaHlV7_ZtGawzc8q3_BOZKYW9ae2jzOWB_OkNSpPOPUsIrE480rd_LrnTsZj5RoBgSGCti4SP9Gszq6MUuNkvJFpHRzphzNTL5ihfvXnRDSN2GgrLbORf4hOluZ7-NqOB3IU_ARTvRukqxMdLo_3HgGZyXb5ihtmy16AVc5-HZmNcZA1hqtnWMaiaaZsw333KGrQO8f0jtlZnWG7lWT_PDCuF" style=""/>
+</div>
+<div class="text-center">
+<h3 class="font-headline font-bold text-on-surface" style="">Julian Thorne</h3>
+<p class="text-on-surface-variant text-xs uppercase tracking-tighter mt-1 opacity-60" style="">Screenplay</p>
+</div>
+</div>
+<!-- Crew Member 3 -->
+<div class="group">
+<div class="aspect-square rounded-full overflow-hidden mb-6 border-2 border-transparent group-hover:border-primary-container transition-all duration-500">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="portrait of a cinematographer holding a professional light meter, moody low key lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7H_g2KJ8wSN3DfnlgowhMsZOIRlXRmeYukVLj6A7PN3KFezQfRe4TCMnq_OUyodBKWQHgUS6tLlRbf6NJwuQGzLjrtV-Q-9nUw6Bb_9T7MklP41dcXdQojO0LaN1IdCVMDvYYrIzmvWpB1nKPWBR80G-cmcjuMXW9qz0kIKFi2wl1wiOsWIvil44rB6KORb8cY0m4apyaLtgqjANsfU2tR6zSPB6DEomcIg5i-6XPo4gIR1j_jzkTmGguiY9hI-ZImi9t16ha-EtF" style=""/>
+</div>
+<div class="text-center">
+<h3 class="font-headline font-bold text-on-surface" style="">Soren Miller</h3>
+<p class="text-on-surface-variant text-xs uppercase tracking-tighter mt-1 opacity-60" style="">Cinematography</p>
+</div>
+</div>
+<!-- Crew Member 4 -->
+<div class="group">
+<div class="aspect-square rounded-full overflow-hidden mb-6 border-2 border-transparent group-hover:border-primary-container transition-all duration-500">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="portrait of a film composer sitting in front of a grand piano and synthesizers, dramatic spotlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6SXEQNkmS67k4JBmQr6CD-poUpGBvo2Vh29iH5a8nFPEr4OwILrA0v-IsqZ9coDB5r-oo8LaWbyNwSNEXBzWJPFDNkT6aDX9B8OLOQ-6Q5x73WCNV_k7taqPHYjWb4VGW5azAK577YtROXa_R2crhxK0-3aFODbQaL_mNDrQVdGNzwOIgUIiTTQEwOsyG6Qfb2g68mX-YmtHLvA58megn7r791EdeF_Qgu7iHqTJOARRgWpuAVIceB0ntuQCsXmBBZOUTYwO6MWYE" style=""/>
+</div>
+<div class="text-center">
+<h3 class="font-headline font-bold text-on-surface" style="">Aria Khol</h3>
+<p class="text-on-surface-variant text-xs uppercase tracking-tighter mt-1 opacity-60" style="">Original Score</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Top Cast -->
+<section class="mt-[100px] px-10 pb-20">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-12">
+<h2 class="font-headline text-xs font-bold uppercase tracking-[0.3em] text-primary" style="">Principal Cast</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+<!-- Cast 1 -->
+<div class="relative group overflow-hidden rounded-xl bg-surface-container">
+<img class="w-full aspect-[4/5] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="headshot of a male actor with a rugged look and beard, wearing a tactical jacket, dramatic cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcg6xW73V7cduYy4-x_F2egjJR1CCJOieSuOExEubKkkfX_yLWyxyEJYU2IMbbybG2WR2KZZO1Ae0fIA_YYbt3G6cwQX4gT8zf0ddzNA1NLzduXc6X6AdhbqIovNCrGuVDJ8rt87E2cvotovUFIQNgBDTF5BIg7EfjJ2_EC12CkD_erj8T79hD5XsB3UMqnT7nH_aqRfqQk9UtcVnf_dwsOZ-Vz-FI0f1vLBy5ZO-DCFrN9rgxDgCzbwFXkUngJrumRJfkuoyYJOmu" style=""/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="font-headline font-bold text-lg text-white" style="">Cillian Vane</h3>
+<p class="text-primary text-[10px] uppercase font-bold tracking-widest" style="">Det. Elias Thorne</p>
+</div>
+</div>
+<!-- Cast 2 -->
+<div class="relative group overflow-hidden rounded-xl bg-surface-container">
+<img class="w-full aspect-[4/5] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="headshot of a female actress with piercing eyes and sharp features, futuristic attire, cold blue rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK3noKdb_siYE-rAMgfCyrOHRbqmAdx1tshJRGzOiSQAgTwoKz5To86qZowNy4ot0RNq-wHxQa33bfFgoiHtyNFbgaqguLIyMaxZ-pw9UZIIRjevhdZkBfTDlHA8R-OLp7x09gsqPCuuPMghVGNmiL9kLeT_u8A3N_xzW4EjkYRr44nL5qA8HmF4bzbuigAIcB7CifW_3yjJUCxL1xEL7jSITfIq8TKCm4cueARH2-IN-jSRoMsJVY3B8gOm-InU7VraZk8s-KPz32" style=""/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="font-headline font-bold text-lg text-white" style="">Mira Belova</h3>
+<p class="text-primary text-[10px] uppercase font-bold tracking-widest" style="">Protocol X</p>
+</div>
+</div>
+<!-- Cast 3 -->
+<div class="relative group overflow-hidden rounded-xl bg-surface-container">
+<img class="w-full aspect-[4/5] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="headshot of an older male actor with grey hair and glasses, looking intellectual and mysterious, warm library lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD52yjChTEIjBcN-fmPderc-MD4uCgTtUulGvPnZOveWMnzGz45gkwvH18vATp-za6iCqOHQnlN2misbW85rF_ac3NRW6Gum6TghehTI4mVAQAVmZP2PBZfh1XvNgu_zqtibNPWCiGyTNAB-o3Cubm3j2mTbKsRs0M5eq6O5O-Um58Lz04hKtU3g41XDqmHfB21BUhtzIvPqwDrr-F7KivhCx9RhOADFDikcVAe0RA8r7EudsETUnsrUs6SA8dHj7uLvbH_12PtYYK-" style=""/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="font-headline font-bold text-lg text-white" style="">Dr. Arthur Sterling</h3>
+<p class="text-primary text-[10px] uppercase font-bold tracking-widest" style="">The Architect</p>
+</div>
+</div>
+<!-- Cast 4 -->
+<div class="relative group overflow-hidden rounded-xl bg-surface-container">
+<img class="w-full aspect-[4/5] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="headshot of a female actress with a cyberpunk aesthetic, neon highlights in hair, intense expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLKzU9gZs-KIT6f6tKS79uHOFBooQCr2eX8I9VvbEm2wK1UJwvbvR20HA2t6_GOBlhg5trQvlxqeqgex6THhVv3nljGQwxJHZfoXkG8jKIVXMmx3bKhsR9QMCHrrb6f6gVOQ3LAKD4T0C6syP5AhFNEZ-xcxnNNDKoefXFUAtFLQjf03Gk9imUC8UCujDYk4PWb9F-2YRQc13oFjVXDPJ-c1m7VICXW0jJ8rEIq0Y-RCNzmkwXxvIIxJFWnA4Inuh5Ey0v6ZH0liO6" style=""/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="font-headline font-bold text-lg text-white" style="">Sasha Gray</h3>
+<p class="text-primary text-[10px] uppercase font-bold tracking-widest" style="">Echo</p>
+</div>
+</div>
+<!-- Cast 5 -->
+<div class="relative group overflow-hidden rounded-xl bg-surface-container">
+<img class="w-full aspect-[4/5] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="headshot of a young male actor with a tech-savvy hacker look, hoodie and headphones, glowing monitors in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7909Hl_v6r0x-p-hU6W7r9lqZ5p7G_m3yvV9L0P3kU7v8Y1_l_2_O0B8C_G9E9D8F_H1I2J3K4L5M6N7O8P9Q0R1S2T3U4V5W6X7Y8Z9" style=""/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="font-headline font-bold text-lg text-white" style="">Leo Vance</h3>
+<p class="text-primary text-[10px] uppercase font-bold tracking-widest" style="">The Courier</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#131313] w-full py-12 px-10 bg-surface-container-low mt-20 border-t border-[#e9bcb6]/10 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-6 md:mb-0">
+<span class="text-[#e50914] font-bold text-xl tracking-tighter font-headline" style="">CineCurator</span>
+</div>
+<div class="flex flex-wrap justify-center gap-8 mb-6 md:mb-0">
+<a class="font-['Inter'] text-sm tracking-tight text-[#e9bcb6] hover:text-[#e50914] transition-colors cursor-pointer" href="#" style=""><br/></a>
+<a class="font-['Inter'] text-sm tracking-tight text-[#e9bcb6] hover:text-[#e50914] transition-colors cursor-pointer" href="#" style=""><br/></a>
+<a class="font-['Inter'] text-sm tracking-tight text-[#e9bcb6] hover:text-[#e50914] transition-colors cursor-pointer" href="#" style=""><br/></a>
+<a class="font-['Inter'] text-sm tracking-tight text-[#e9bcb6] hover:text-[#e50914] transition-colors cursor-pointer" href="#" style=""><br/></a>
+</div>
+<div class="text-[#e9bcb6] opacity-50 text-xs font-['Inter']" style="">
+            © 2024 CineCurator Cinematic Editorial. All rights reserved.
+        </div>
+</footer>
+</body></html>

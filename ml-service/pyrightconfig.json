@@ -1,0 +1,13 @@
+{
+  "pythonVersion": "3.14",
+  "pythonPlatform": "Windows",
+  "pythonPath": "C:/Program Files/Python314/python.exe",
+  "extraPaths": [
+    ".",
+    "model",
+    "C:/Users/tshiv/AppData/Roaming/Python/Python314/site-packages"
+  ],
+  "typeCheckingMode": "basic",
+  "reportMissingImports": false,
+  "reportMissingModuleSource": false
+}
