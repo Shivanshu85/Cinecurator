@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { movieKeys } from "@/lib/queryKeys";
+import { apiClient } from "@/lib/apiClient";
 import { fetchMovieById } from "@/services/omdb";
 import { findTMDBByImdbId, getMovieCast, getSimilarMovies } from "@/services/tmdb";
 import type { Movie, CastMember } from "@/types/movie";
@@ -11,7 +12,7 @@ export interface MovieDetails extends Movie {
 
 export function useMovie(id: string) {
   return useQuery({
-    queryKey: movieKeys.detail(id),
+    queryKey: movieKeys.byId(id),
     queryFn: async () => {
       let movie: Movie | null = null;
       let tmdbId: number | undefined;
@@ -32,15 +33,13 @@ export function useMovie(id: string) {
         const tmdbData = await findTMDBByImdbId(movie.imdbID);
         if (tmdbData) {
           tmdbId = tmdbData.id;
-          movie.backdropPath = tmdbData.backdrop_path 
+          movie.backdropPath = tmdbData.backdrop_path
             ? `/api/tmdb-image?path=${encodeURIComponent(tmdbData.backdrop_path)}&size=w1280`
             : undefined;
         }
       }
 
-      // If we still don't have movie but have tmdbId, we need to fetch TMDB details
       if (!movie && tmdbId) {
-        const { apiClient } = await import("@/lib/apiClient");
         const { data } = await apiClient.get(`https://api.themoviedb.org/3/movie/${tmdbId}`, {
           params: { api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY },
         });

@@ -1,5 +1,6 @@
-import type { Movie, CastMember } from "@/types/movie";
-import { apiClient } from "@/lib/apiClient";
+import { Movie, CastMember, GENRE_TMDB_IDS, Genre } from "@/types/movie";
+import { apiClient, isTmdbOffline } from "@/lib/apiClient";
+import { FALLBACK_BY_GENRE } from "@/lib/fallbackMovies";
 
 const TMDB_BASE = "https://api.themoviedb.org/3";
 
@@ -22,6 +23,7 @@ export function getTMDBBackdropUrl(path: string, size = "w1280") {
 }
 
 export async function findTMDBByImdbId(imdbId: string) {
+  if (isTmdbOffline) return null;
   try {
     const { data } = await apiClient.get(`${TMDB_BASE}/find/${imdbId}`, {
       params: { api_key: getApiKey(), external_source: "imdb_id" },
@@ -33,6 +35,7 @@ export async function findTMDBByImdbId(imdbId: string) {
 }
 
 export async function getMovieCast(tmdbId: number): Promise<CastMember[]> {
+  if (isTmdbOffline) return [];
   try {
     const { data } = await apiClient.get(`${TMDB_BASE}/movie/${tmdbId}/credits`, {
       params: { api_key: getApiKey() },
@@ -50,6 +53,7 @@ export async function getMovieCast(tmdbId: number): Promise<CastMember[]> {
 }
 
 export async function enrichMovieWithTMDB(movie: Movie): Promise<Movie> {
+  if (isTmdbOffline) return movie;
   try {
     const tmdbMovie = await findTMDBByImdbId(movie.imdbID);
     if (!tmdbMovie) return movie;
@@ -69,6 +73,15 @@ export async function enrichMovieWithTMDB(movie: Movie): Promise<Movie> {
 }
 
 export async function fetchMoviesByGenre(genreId: number, page = 1): Promise<Movie[]> {
+  if (isTmdbOffline) {
+    const genreKey = (Object.keys(GENRE_TMDB_IDS) as Genre[]).find(
+      (key) => GENRE_TMDB_IDS[key] === genreId
+    );
+    if (genreKey && FALLBACK_BY_GENRE[genreKey]) {
+      return FALLBACK_BY_GENRE[genreKey];
+    }
+    return [];
+  }
   try {
     const { data } = await apiClient.get(`${TMDB_BASE}/discover/movie`, {
       params: {
@@ -94,11 +107,23 @@ export async function fetchMoviesByGenre(genreId: number, page = 1): Promise<Mov
       backdropPath: m.backdrop_path ? getTMDBBackdropUrl(m.backdrop_path)! : undefined,
     }));
   } catch {
+    console.warn(`fetchMoviesByGenre TMDB fetch failed or timed out for genre ID ${genreId}. Falling back to local high-quality genre movies.`);
+    try {
+      const genreKey = (Object.keys(GENRE_TMDB_IDS) as Genre[]).find(
+        (key) => GENRE_TMDB_IDS[key] === genreId
+      );
+      if (genreKey && FALLBACK_BY_GENRE[genreKey]) {
+        return FALLBACK_BY_GENRE[genreKey];
+      }
+    } catch (e) {
+      console.error("Fallback genre lookup failed:", e);
+    }
     return [];
   }
 }
 
 export async function getSimilarMovies(tmdbId: number): Promise<Movie[]> {
+  if (isTmdbOffline) return [];
   try {
     const { data } = await apiClient.get(`${TMDB_BASE}/movie/${tmdbId}/similar`, {
       params: { api_key: getApiKey() },

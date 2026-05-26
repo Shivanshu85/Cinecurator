@@ -15,11 +15,16 @@ export async function GET(request: NextRequest) {
 
   const tmdbUrl = `https://media.themoviedb.org/t/p/${size}${path}`;
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2500);
+
   try {
     const res = await fetch(tmdbUrl, {
       next: { revalidate: 86400 }, // cache 24 hours
       headers: { "User-Agent": "CineCurator/1.0" },
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
 
     if (!res.ok) {
       return new NextResponse(null, { status: res.status });

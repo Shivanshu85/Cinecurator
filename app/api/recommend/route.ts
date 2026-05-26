@@ -23,6 +23,16 @@ function mapTmdb(m: any) {
   };
 }
 
+async function fetchWithTimeout(url: string, init?: RequestInit, timeout = 2500) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 /**
  * POST /api/recommend
  * Body: { title: string, imdbID?: string, tmdbId?: number }
@@ -40,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     // If no tmdbId provided, search by title
     if (!movieTmdbId && title) {
-      const searchRes = await fetch(
+      const searchRes = await fetchWithTimeout(
         `${TMDB_BASE}/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}&include_adult=false`,
         { next: { revalidate: 3600 } }
       );
@@ -53,7 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get similar movies
-    const simRes = await fetch(
+    const simRes = await fetchWithTimeout(
       `${TMDB_BASE}/movie/${movieTmdbId}/similar?api_key=${TMDB_KEY}&page=1`,
       { next: { revalidate: 3600 } }
     );

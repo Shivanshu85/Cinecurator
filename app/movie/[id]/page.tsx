@@ -1,15 +1,12 @@
 "use client";
 
-import { use } from "react";
 import Image from "next/image";
 import { useMovie } from "@/hooks/queries/useMovie";
 import { useAuth } from "@/hooks/useAuth";
 import { useLibrary, useAddToLibrary, useRemoveFromLibrary } from "@/hooks/queries/useLibrary";
-import MovieCard from "@/components/MovieCard";
 
-export default function MoviePage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params);
-  const decodedId = decodeURIComponent(resolvedParams.id);
+export default function MoviePage({ params }: { params: { id: string } }) {
+  const decodedId = decodeURIComponent(params.id);
   
   const { user } = useAuth();
   
@@ -23,7 +20,7 @@ export default function MoviePage({ params }: { params: Promise<{ id: string }> 
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e]">
+      <div className="min-h-screen flex items-center justify-center bg-[#131313]">
         <div className="flex flex-col items-center gap-4">
           <span className="material-symbols-outlined animate-spin text-4xl text-primary">autorenew</span>
           <p className="text-white/60 font-medium">Loading masterpiece...</p>
@@ -34,7 +31,7 @@ export default function MoviePage({ params }: { params: Promise<{ id: string }> 
 
   if (error || !movie) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e]">
+      <div className="min-h-screen flex items-center justify-center bg-[#131313]">
         <h1 className="text-3xl text-white">Movie not found</h1>
       </div>
     );
@@ -52,136 +49,129 @@ export default function MoviePage({ params }: { params: Promise<{ id: string }> 
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[#0e0e0e] pb-20">
-      {/* ─── BACKDROP & HERO ─── */}
-      <div className="relative w-full h-[60vh] md:h-[70vh]">
-        <div className="absolute inset-0 bg-[#0e0e0e]">
-          {movie.backdropPath && (
-            <Image
-              src={movie.backdropPath}
-              alt={movie.title}
-              fill
-              className="object-cover opacity-30"
-              priority
-              unoptimized
-            />
-          )}
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/80 to-transparent" />
-        
-        <div className="absolute inset-0 flex items-end">
-          <div className="max-w-7xl mx-auto px-6 md:px-8 pb-12 w-full flex flex-col md:flex-row gap-8 md:items-end">
-            {/* Poster */}
-            <div className="w-48 md:w-64 aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 shrink-0 mx-auto md:mx-0">
-              <Image
-                src={movie.poster || "https://via.placeholder.com/300x450?text=No+Poster"}
-                alt={movie.title}
-                fill
-                className="object-cover"
-                unoptimized
-              />
-            </div>
-            
-            {/* Details */}
-            <div className="flex flex-col text-center md:text-left">
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-3">
-                {movie.year && (
-                  <span className="text-primary-container font-black tracking-tight text-lg">
-                    {movie.year}
-                  </span>
-                )}
-                {movie.rating && movie.rating !== "N/A" && (
-                  <span className="bg-white/10 text-white text-sm font-bold px-3 py-1 rounded backdrop-blur-sm">
-                    ⭐ {movie.rating}
-                  </span>
-                )}
-              </div>
-              <h1 className="text-4xl md:text-6xl font-headline font-black text-white mb-4 tracking-tight leading-tight">
-                {movie.title}
-              </h1>
-              <p className="text-on-surface-variant text-base md:text-lg mb-6 max-w-3xl line-clamp-3">
-                {movie.plot}
-              </p>
-              
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
-                <button
-                  onClick={handleLibraryToggle}
-                  disabled={addToLibrary.isPending || removeFromLibrary.isPending}
-                  className={`px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg ${
-                    isInLibrary
-                      ? "bg-white/10 text-white hover:bg-white/20 border border-white/10"
-                      : "bg-primary-container text-white hover:bg-[#ff0b1a] shadow-primary-container/20"
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-xl">
-                    {isInLibrary ? "bookmark_added" : "bookmark_add"}
-                  </span>
-                  {isInLibrary ? "In Library" : "Add to Library"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  const genres = movie.genre?.split(",").map(g => g.trim()) || ["Movie"];
+  const cast = movie.cast || [];
 
-      {/* ─── GENRES & CAST ─── */}
-      <div className="max-w-7xl mx-auto px-6 md:px-8 pt-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Main Info */}
-          <div className="md:col-span-2 space-y-8">
-            <section>
-              <h2 className="text-2xl font-headline font-bold text-white mb-4">Synopsis</h2>
-              <p className="text-white/70 text-lg leading-relaxed">{movie.plot}</p>
-            </section>
-            
-            {movie.genre && (
-              <section>
-                <div className="flex flex-wrap gap-2">
-                  {movie.genre.split(", ").map((g) => (
-                    <span key={g} className="px-4 py-1.5 rounded-full border border-white/20 text-white/80 text-sm font-medium">
-                      {g}
-                    </span>
-                  ))}
-                </div>
-              </section>
+  return (
+    <div className="bg-[#131313] text-[#e5e2e1] min-h-screen w-full selection:bg-primary-container selection:text-white pb-20">
+      {/* ─── HERO SECTION ─── */}
+      <section className="relative h-[80vh] md:h-[921px] w-full overflow-hidden flex items-end pb-24">
+        <div className="absolute inset-0 z-0">
+          <img 
+             className="w-full h-full object-cover" 
+             alt={movie.title} 
+             src={movie.backdropPath || movie.poster || "https://via.placeholder.com/1280x720?text=No+Backdrop"} 
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(0deg, #131313 0%, rgba(19, 19, 19, 0.4) 50%, rgba(19, 19, 19, 0.8) 100%)" }}></div>
+        </div>
+        <div className="relative z-10 px-6 md:px-10 max-w-5xl">
+          <div className="flex flex-wrap gap-3 mb-6">
+            {genres.slice(0, 2).map((genre) => (
+              <span key={genre} className="px-3 py-1 bg-[#464747]/50 text-[#e9bcb6] text-[10px] font-bold uppercase tracking-widest rounded-full backdrop-blur-md">
+                {genre}
+              </span>
+            ))}
+            {movie.year && (
+              <span className="px-3 py-1 bg-[#464747]/50 text-[#e9bcb6] text-[10px] font-bold uppercase tracking-widest rounded-full backdrop-blur-md">
+                {movie.year}
+              </span>
+            )}
+            {movie.rating && movie.rating !== "N/A" && (
+              <span className="px-3 py-1 bg-[#e50914] text-white text-[10px] font-bold uppercase tracking-widest rounded-full">
+                Rating: {movie.rating}
+              </span>
             )}
           </div>
-          
-          {/* Cast Sidebar */}
-          {movie.cast && movie.cast.length > 0 && (
-            <div className="space-y-6">
-              <h2 className="text-xl font-headline font-bold text-white mb-4">Top Cast</h2>
-              <div className="space-y-4">
-                {movie.cast.map((actor) => (
-                  <div key={actor.id} className="flex items-center gap-4 bg-white/5 rounded-xl p-3 border border-white/5">
-                    <div className="w-12 h-12 relative rounded-full overflow-hidden shrink-0 bg-white/10">
-                      {actor.profilePath ? (
-                        <Image src={actor.profilePath} alt={actor.name} fill className="object-cover" unoptimized />
-                      ) : (
-                        <span className="material-symbols-outlined absolute inset-0 flex items-center justify-center text-white/50">person</span>
-                      )}
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold text-sm">{actor.name}</h4>
-                      <p className="text-white/60 text-xs">{actor.character}</p>
-                    </div>
-                  </div>
-                ))}
+          <h1 className="font-headline text-5xl md:text-8xl font-extrabold tracking-tighter mb-8 text-[#e5e2e1] leading-tight">
+            {movie.title}
+          </h1>
+          <div className="flex flex-col md:flex-row gap-4">
+            <button className="bg-[#e50914] text-[#fff7f6] px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all duration-200">
+              Watch Trailer
+            </button>
+            <button 
+              onClick={handleLibraryToggle}
+              disabled={addToLibrary.isPending || removeFromLibrary.isPending}
+              className={`border border-[#5e3f3b] text-[#e5e2e1] px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase active:scale-95 transition-all duration-200 ${
+                isInLibrary ? "bg-[#353534]/80 hover:bg-[#353534]" : "hover:bg-[#2a2a2a]"
+              }`}
+            >
+              {isInLibrary ? "In Library" : "Add to Library"}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── ABOUT / SYNOPSIS SECTION ─── */}
+      <section className="mt-[60px] md:mt-[100px] px-6 md:px-10 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+          <div className="md:col-span-4 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl">
+            <img 
+              className="w-full h-full object-cover" 
+              alt={movie.title} 
+              src={movie.poster || "https://via.placeholder.com/600x900?text=No+Poster"} 
+            />
+          </div>
+          <div className="md:col-span-8 flex flex-col justify-center h-full">
+            <h2 className="font-headline text-xs font-bold uppercase tracking-[0.3em] text-[#ffb4aa] mb-6">
+              Synopsis
+            </h2>
+            <p className="text-[#e9bcb6] text-lg md:text-xl leading-relaxed font-light font-body">
+              {movie.plot}
+            </p>
+            <div className="mt-12 flex flex-wrap gap-8">
+              {movie.year && (
+                <div>
+                  <span className="block text-[10px] uppercase tracking-widest text-[#ffb4aa] font-bold mb-1">
+                    Release Year
+                  </span>
+                  <span className="text-[#e5e2e1] font-medium">
+                    {movie.year}
+                  </span>
+                </div>
+              )}
+              <div>
+                <span className="block text-[10px] uppercase tracking-widest text-[#ffb4aa] font-bold mb-1">
+                  Production
+                </span>
+                <span className="text-[#e5e2e1] font-medium">
+                  CineCurator Network
+                </span>
               </div>
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* ─── SIMILAR MOVIES ─── */}
-      {movie.similar && movie.similar.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 md:px-8 py-16 mt-8 border-t border-white/10">
-          <h2 className="text-2xl md:text-3xl font-headline font-bold text-white mb-8">More Like This</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {movie.similar.slice(0, 10).map((m) => (
-              <MovieCard key={m.imdbID} movie={m} />
-            ))}
+      {/* ─── PRINCIPAL CAST ─── */}
+      {cast.length > 0 && (
+        <section className="mt-[80px] md:mt-[100px] px-6 md:px-10 pb-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-end mb-12">
+              <h2 className="font-headline text-xs font-bold uppercase tracking-[0.3em] text-[#ffb4aa]">
+                Principal Cast
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+              {cast.slice(0, 5).map((actor) => (
+                <div key={actor.id} className="relative group overflow-hidden rounded-xl bg-[#201f1f]">
+                  <img 
+                    className="w-full aspect-[4/5] object-cover group-hover:scale-110 transition-transform duration-700" 
+                    alt={actor.name} 
+                    src={actor.profilePath || "https://via.placeholder.com/400x500?text=Actor"} 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+                  <div className="absolute bottom-0 left-0 p-4 md:p-6 w-full">
+                    <h3 className="font-headline font-bold text-sm md:text-lg text-white line-clamp-1">
+                      {actor.name}
+                    </h3>
+                    <p className="text-[#ffb4aa] text-[9px] md:text-[10px] uppercase font-bold tracking-widest line-clamp-1">
+                      {actor.character}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
