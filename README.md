@@ -77,6 +77,13 @@ Integrated with **Supabase Authentication** for user watchlist management, **Tan
 
 ---
 
+#### 8. Personal Movie Library & Watchlist Page
+*Custom user movie library displaying saved films, favorite collections, and cross-device synced watchlists.*
+
+![Personal Movie Library Page](public/screenshots/library_page.png)
+
+---
+
 ## 3. Key Features
 
 - 🤖 **TF-IDF & Cosine Similarity ML Model:** Python FastAPI service calculating high-dimensional vector similarity across movie overviews, genres, and titles.
