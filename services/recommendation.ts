@@ -3,7 +3,7 @@ import { findTMDBByImdbId, getSimilarMovies, getTMDBPosterUrl, getTMDBBackdropUr
 import { internalClient, apiClient, isTmdbOffline } from "@/lib/apiClient";
 import { FALLBACK_TOP_SUGGESTIONS, FALLBACK_BY_GENRE } from "@/lib/fallbackMovies";
 
-const ML_API_URL = process.env.NEXT_PUBLIC_ML_API_URL || "http://localhost:8000";
+const ML_API_URL = process.env.NEXT_PUBLIC_ML_API_URL || "http://127.0.0.1:8000";
 
 export async function getMLRecommendations(req: RecommendationRequest): Promise<string[]> {
   try {

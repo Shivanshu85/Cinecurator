@@ -134,44 +134,58 @@ class MovieRecommender:
         # Cosine similarity
         cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-        # Index by lowercase title — keep only the first occurrence of each title
-        # to guarantee lookups always return a scalar rather than a Series.
-        df["title_lower"] = df["title"].str.lower()
-        deduped = df[~df["title_lower"].duplicated(keep="first")]
-        indices = pd.Series(deduped.index, index=deduped["title_lower"])
+        # Index by lowercase title using native Python dict & list for O(1) sub-millisecond lookup
+        df["title_lower"] = df["title"].str.lower().str.strip()
+        title_to_idx = {}
+        title_list = []
+        for idx, row_title in enumerate(df["title_lower"]):
+          if row_title not in title_to_idx:
+            title_to_idx[row_title] = idx
+            title_list.append(row_title)
 
         # Commit atomically so the recommender is never in a half-ready state
         self.df = df
         self.cosine_sim = cosine_sim
-        self.indices = indices
+        self.title_to_idx = title_to_idx
+        self.title_list = title_list
+        self.cache = {}
         self.is_ready = True
         self.movie_count = len(df)
         logger.info(f"Recommender trained on {self.movie_count} movies")
 
     def recommend(self, title: str, n: int = 10):
-        """Return top-N recommended movie titles for a given title."""
-        if not self.is_ready:
+        """Return top-N recommended movie titles for a given title using sub-millisecond lookup & top-K partitioning."""
+        if not self.is_ready or self.df is None or self.cosine_sim is None:
             return []
 
         title_lower = title.lower().strip()
+        cache_key = f"{title_lower}_{n}"
+        if hasattr(self, "cache") and cache_key in self.cache:
+            return self.cache[cache_key]
 
-        # Exact match
-        if title_lower in self.indices:
-            idx = self.indices[title_lower]
+        # Fast O(1) dict lookup
+        if hasattr(self, "title_to_idx") and title_lower in self.title_to_idx:
+            idx = self.title_to_idx[title_lower]
         else:
-            # Fuzzy match — find closest title
-            matches = [t for t in self.indices.index if title_lower in t or t in title_lower]
+            # Fast fuzzy match on native list
+            matches = [t for t in getattr(self, "title_list", []) if title_lower in t or t in title_lower]
             if not matches:
                 return []
-            idx = self.indices[matches[0]]
+            idx = self.title_to_idx[matches[0]]
 
-        # Handle duplicate titles (take first index)
-        if isinstance(idx, pd.Series):
-            idx = idx.iloc[0]
+        scores = self.cosine_sim[idx]
+        total_items = len(scores)
+        k = min(n + 1, total_items)
 
-        sim_scores = list(enumerate(self.cosine_sim[idx]))
-        sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-        sim_scores = sim_scores[1 : n + 1]  # type: ignore  # Exclude the movie itself
+        # Fast O(N) top-K partitioning using NumPy argpartition
+        partition_indices = np.argpartition(-scores, k - 1)[:k]
+        top_indices = partition_indices[np.argsort(-scores[partition_indices])].tolist()
 
-        movie_indices = [i[0] for i in sim_scores]
-        return self.df["title"].iloc[movie_indices].tolist()
+        # Filter out the queried movie itself
+        movie_indices = [i for i in top_indices if i != idx][:n]
+        titles = self.df["title"].iloc[movie_indices].tolist()
+
+        if not hasattr(self, "cache"):
+            self.cache = {}
+        self.cache[cache_key] = titles
+        return titles

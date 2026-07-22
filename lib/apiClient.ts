@@ -1,21 +1,29 @@
 /**
  * Centralized Axios API client with:
- * - Retry logic (up to 3 retries for network errors / 5xx)
- * - Request cancellation via AbortController
- * - Response interceptors for unified error handling
+ * - Persistent HTTP/HTTPS Connection Pooling (Keep-Alive)
+ * - Fast failover timeouts & retry logic
+ * - Unified error handling & cancellation
  */
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
+import http from "http";
+import https from "https";
 
-const RETRY_LIMIT = 3;
-const RETRY_DELAY_MS = 500;
+const RETRY_LIMIT = 2;
+const RETRY_DELAY_MS = 300;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Shared Axios instance for external API calls (TMDB). 
- * Shorter timeout so blocked TMDB requests fail quickly and failover gracefully without hanging the page. */
+// Node.js Persistent Keep-Alive HTTP/HTTPS Agents to eliminate TCP/TLS handshake overhead
+const isServer = typeof window === "undefined";
+const httpAgent = isServer ? new http.Agent({ keepAlive: true, maxSockets: 100, maxFreeSockets: 20 }) : undefined;
+const httpsAgent = isServer ? new https.Agent({ keepAlive: true, maxSockets: 100, maxFreeSockets: 20 }) : undefined;
+
+/** Shared Axios instance for external API calls (TMDB). */
 export const apiClient = axios.create({
-  timeout: 2500,
+  timeout: 3000,
   headers: { "Content-Type": "application/json" },
+  httpAgent,
+  httpsAgent,
 });
 
 export let isTmdbOffline = false;
@@ -24,7 +32,9 @@ export let isTmdbOffline = false;
 apiClient.interceptors.response.use(
   (res) => res,
   (err) => {
-    isTmdbOffline = true;
+    if (err.code === "ECONNABORTED" || err.code === "ENOTFOUND" || !err.response) {
+      isTmdbOffline = true;
+    }
     return Promise.reject(err);
   }
 );
@@ -32,8 +42,10 @@ apiClient.interceptors.response.use(
 /** Shared Axios instance for internal Next.js API routes */
 export const internalClient = axios.create({
   baseURL: typeof window !== "undefined" ? window.location.origin : "",
-  timeout: 15000,
+  timeout: 10000,
   headers: { "Content-Type": "application/json" },
+  httpAgent,
+  httpsAgent,
 });
 
 // –– Retry interceptor ––
@@ -46,8 +58,7 @@ function addRetryInterceptor(client: typeof apiClient) {
     if (!config) return Promise.reject(error);
 
     const isNetworkError = !error.response;
-    const isServerError =
-      error.response && error.response.status >= 500;
+    const isServerError = error.response && error.response.status >= 500;
     const isCancelled = axios.isCancel(error);
 
     if (isCancelled) return Promise.reject(error);

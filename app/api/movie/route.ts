@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { omdbCache } from "@/lib/serverCache";
 
 const OMDB_BASE = "https://www.omdbapi.com";
 const API_KEY = process.env.OMDB_API_KEY || "";
@@ -32,6 +33,17 @@ export async function GET(request: NextRequest) {
   const id = searchParams.get("id");
   const search = searchParams.get("s");
 
+  const cacheKey = `omdb_${id || title || search || ""}`;
+  const cachedResult = omdbCache.get(cacheKey);
+  if (cachedResult) {
+    return NextResponse.json(cachedResult, {
+      headers: {
+        "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+        "X-Cache": "HIT",
+      },
+    });
+  }
+
   if (!API_KEY) {
     return NextResponse.json({ error: "OMDb API key not configured" }, { status: 500 });
   }
@@ -50,7 +62,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const res = await fetch(`${OMDB_BASE}?${params.toString()}`, {
-      next: { revalidate: 3600 }, // cache 1 hour
+      next: { revalidate: 86400 },
     });
     const data = await res.json();
 
@@ -58,15 +70,24 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: data.Error || "Not found" }, { status: 404 });
     }
 
-    // Search returns a list
+    let responsePayload: any;
     if (search) {
-      const results = (data.Search || []).map((m: any) => // eslint-disable-line
+      const results = (data.Search || []).map((m: any) =>
         mapMovie({ ...m, imdbRating: "N/A", Plot: "", Director: "" })
       );
-      return NextResponse.json({ results });
+      responsePayload = { results };
+    } else {
+      responsePayload = mapMovie(data);
     }
 
-    return NextResponse.json(mapMovie(data));
+    omdbCache.set(cacheKey, responsePayload);
+
+    return NextResponse.json(responsePayload, {
+      headers: {
+        "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+        "X-Cache": "MISS",
+      },
+    });
   } catch (err) {
     console.error("OMDb API error:", err);
     return NextResponse.json({ error: "OMDb fetch failed" }, { status: 502 });

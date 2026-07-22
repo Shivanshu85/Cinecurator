@@ -1,20 +1,21 @@
 import { QueryClient } from "@tanstack/react-query";
 
 /**
- * Shared QueryClient singleton with sensible defaults:
- * - staleTime: 5 min (queries won't re-fetch for 5 min after last success)
- * - gcTime: 30 min (cached data is kept for 30 min after component unmounts)
- * - retry: 2 on query failure (Axios also retries internally)
- * - refetchOnWindowFocus: true (keep data fresh when user tabs back)
+ * Shared QueryClient singleton with production performance defaults:
+ * - staleTime: 10 min (queries won't re-fetch for 10 min after last success)
+ * - gcTime: 60 min (cached data is kept for 60 min in memory)
+ * - retry: 1 on query failure
+ * - refetchOnWindowFocus: false (prevents expensive background re-querying when tabbing)
+ * - refetchOnReconnect: false
  */
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,
-      gcTime: 30 * 60 * 1000,
-      retry: 2,
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
+      staleTime: 10 * 60 * 1000,
+      gcTime: 60 * 60 * 1000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
     },
     mutations: {
       retry: 1,
