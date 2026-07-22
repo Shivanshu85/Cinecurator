@@ -1,10 +1,11 @@
+import os
+import logging
+from typing import List, Optional
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException  # type: ignore
 from fastapi.middleware.cors import CORSMiddleware  # type: ignore
 from pydantic import BaseModel  # type: ignore
-from typing import List, Optional
-from contextlib import asynccontextmanager
 from model.recommender import MovieRecommender  # type: ignore
-import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -25,14 +26,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="CineCurator ML API",
-    description="Content-based movie recommendation service",
+    description="Production-grade Content-based movie recommendation microservice",
     version="1.0.0",
     lifespan=lifespan,
 )
 
+# Production CORS configuration
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "*")
+allowed_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allowed_origins if allowed_origins else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,7 +58,11 @@ class RecommendResponse(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "ready": recommender.is_ready}
+    return {
+        "status": "ok",
+        "ready": recommender.is_ready,
+        "movie_count": getattr(recommender, "movie_count", 0),
+    }
 
 
 @app.post("/recommend", response_model=RecommendResponse)
