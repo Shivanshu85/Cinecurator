@@ -1,0 +1,20 @@
+# Global Owners
+* @Shivanshu85
+
+# Frontend Architecture & Next.js App Router
+/app/ @Shivanshu85
+/components/ @Shivanshu85
+/context/ @Shivanshu85
+/hooks/ @Shivanshu85
+/store/ @Shivanshu85
+
+# FastAPI Machine Learning Recommendation Microservice
+/ml-service/ @Shivanshu85
+
+# Supabase & Database Integrations
+/superbase/ @Shivanshu85
+/services/superbase.ts @Shivanshu85
+
+# Documentation & Community Architecture
+/docs/ @Shivanshu85
+/.github/ @Shivanshu85

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "💬 GitHub Discussions"
+    url: "https://github.com/Shivanshu85/Cinecurator/discussions"
+    about: "Ask questions, share ideas, or discuss implementation architecture with the community."
+  - name: "🔒 Security Vulnerability Reporting"
+    url: "https://github.com/Shivanshu85/Cinecurator/blob/main/SECURITY.md"
+    about: "Report security vulnerabilities responsibly following our security disclosure policy."
