@@ -1,4 +1,4 @@
-fastapi>=0.115
+fastapi>=0.139.2
 uvicorn[standard]>=0.34
 scikit-learn>=1.6
 pandas>=3.0
