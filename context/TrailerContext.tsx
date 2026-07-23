@@ -93,31 +93,31 @@ export function TrailerProvider({ children }: { children: React.ReactNode }) {
       {/* ─── GLOBAL CINEMATIC TRAILER MODAL ─── */}
       {isOpen && videoKey && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-8 bg-black/85 backdrop-blur-md md:backdrop-blur-lg transition-all duration-300"
-          onClick={closeTrailer}
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/90 backdrop-blur-xl transition-all duration-300"
         >
-          {/* Player Container with 16:9 Aspect Ratio, Thick White Border & Strongly Rounded Corners */}
-          <div
-            className="relative w-full max-w-[94vw] sm:max-w-[90vw] md:max-w-5xl aspect-video max-h-[80vh] sm:max-h-[82vh] md:max-h-[85vh] rounded-2xl md:rounded-3xl border-4 border-white shadow-2xl shadow-black/90 overflow-hidden bg-black flex items-center justify-center transform transition-all scale-100"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Circular Close Button */}
+          {/* Centered 16:9 Player Wrapper with Thick White Border & Strongly Rounded Corners */}
+          <div className="relative w-full max-w-4xl max-h-[75vh] flex flex-col items-end">
+            
+            {/* Top-Right Circular X Close Button (Positioned safely above/outside iframe) */}
             <button
               onClick={closeTrailer}
               aria-label="Close trailer"
-              className="absolute top-3 right-3 md:top-4 md:right-4 z-50 bg-black/80 text-white hover:bg-[#e50914] hover:scale-110 active:scale-95 rounded-full p-2.5 flex items-center justify-center transition-all border-2 border-white/40 shadow-lg group cursor-pointer"
+              className="mb-3 bg-white/10 hover:bg-[#e50914] text-white hover:scale-110 active:scale-95 rounded-full p-2.5 flex items-center justify-center transition-all border-2 border-white/80 shadow-2xl cursor-pointer group"
             >
               <span className="material-symbols-outlined text-xl md:text-2xl font-bold">close</span>
             </button>
 
-            {/* YouTube Iframe Embed */}
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${videoKey}?autoplay=1&enablejsapi=1`}
-              title={`${activeTitle} Trailer`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              className="w-full h-full border-0 rounded-xl"
-            />
+            {/* 16:9 Responsive Video Container */}
+            <div className="relative w-full aspect-video rounded-2xl md:rounded-3xl border-4 border-white shadow-2xl shadow-black/95 overflow-hidden bg-black">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${videoKey}?autoplay=1&enablejsapi=1`}
+                title={`${activeTitle} Trailer`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full border-0 rounded-xl"
+              />
+            </div>
+
           </div>
         </div>
       )}
