@@ -69,10 +69,16 @@ htmlcov/
 # IDE / Editor
 .idea/
 .vscode/
+.qodo/
 *.swp
 *.swo
 
-# AI / System Workspace
+# AI / System Workspace & Session Backups
 .frolic-*
 .gemini/
 brain/
+
+# Internal Developer Notes & Prototypes
+DEPLOYMENT.md
+VERCEL_DEPLOYMENT_CHECKLIST.md
+stitch_movie_recommender/
