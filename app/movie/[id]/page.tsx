@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useMovie } from "@/hooks/queries/useMovie";
 import { useAuth } from "@/hooks/useAuth";
 import { useLibrary, useAddToLibrary, useRemoveFromLibrary } from "@/hooks/queries/useLibrary";
-import { getTrailerUrl } from "@/services/youtube";
+import { useTrailer } from "@/context/TrailerContext";
 
 export default function MoviePage({ params }: { params: { id: string } }) {
   const decodedId = decodeURIComponent(params.id);
@@ -19,7 +19,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
   const isInLibrary = library.some((item) => item.imdb_id === decodedId);
 
   const { data: movie, isLoading, error } = useMovie(decodedId);
-  const [loadingTrailer, setLoadingTrailer] = useState(false);
+  const { openTrailer, isLoading: loadingTrailer } = useTrailer();
 
   if (isLoading) {
     return (
@@ -40,12 +40,14 @@ export default function MoviePage({ params }: { params: { id: string } }) {
     );
   }
 
-  const handleWatchTrailer = async () => {
+  const handleWatchTrailer = () => {
     if (!movie) return;
-    setLoadingTrailer(true);
-    const url = await getTrailerUrl(movie.title, movie.year);
-    setLoadingTrailer(false);
-    if (url) window.open(url, "_blank");
+    openTrailer({
+      title: movie.title,
+      year: movie.year,
+      tmdbId: movie.tmdbId,
+      imdbID: movie.imdbID,
+    });
   };
 
   const handleLibraryToggle = () => {

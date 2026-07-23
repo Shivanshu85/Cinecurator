@@ -6,7 +6,7 @@ import { useState } from "react";
 import type { Movie } from "@/types/movie";
 import { useAuth } from "@/hooks/useAuth";
 import { useLibraryStore } from "@/store/useLibraryStore";
-import { getTrailerUrl } from "@/services/youtube";
+import { useTrailer } from "@/context/TrailerContext";
 
 interface MovieCardFeaturedProps {
   movie: Movie;
@@ -25,15 +25,17 @@ export default function MovieCardFeatured({
   const router = useRouter();
   const { user } = useAuth();
   const { addToLibrary, isInLibrary } = useLibraryStore();
-  const [loadingTrailer, setLoadingTrailer] = useState(false);
+  const { openTrailer, isLoading: loadingTrailer } = useTrailer();
   const [addedToLib, setAddedToLib] = useState(false);
   const inLibrary = isInLibrary(movie.imdbID);
 
-  const handleWatchTrailer = async () => {
-    setLoadingTrailer(true);
-    const url = await getTrailerUrl(movie.title, movie.year);
-    setLoadingTrailer(false);
-    if (url) window.open(url, "_blank");
+  const handleWatchTrailer = () => {
+    openTrailer({
+      title: movie.title,
+      year: movie.year,
+      tmdbId: movie.tmdbId,
+      imdbID: movie.imdbID,
+    });
   };
 
   const handleAddToLibrary = async () => {

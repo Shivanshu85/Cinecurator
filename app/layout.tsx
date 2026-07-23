@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import QueryProvider from "@/components/QueryProvider";
+import { TrailerProvider } from "@/context/TrailerContext";
 
 export const metadata: Metadata = {
   title: "CineCurator | AI-Powered Movie Recommendations",
@@ -26,9 +27,11 @@ export default function RootLayout({
       </head>
       <body className="bg-background text-on-surface font-body selection:bg-primary-container selection:text-white overflow-x-hidden">
         <QueryProvider>
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+          <TrailerProvider>
+            <Navbar />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+          </TrailerProvider>
         </QueryProvider>
       </body>
     </html>
