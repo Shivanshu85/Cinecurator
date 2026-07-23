@@ -6,10 +6,24 @@ import QueryProvider from "@/components/QueryProvider";
 import { TrailerProvider } from "@/context/TrailerContext";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://cinecurator.vercel.app"),
   title: "CineCurator | AI-Powered Movie Recommendations",
   description:
     "Discover your next cinematic masterpiece with AI-powered recommendations based on the movies you love.",
   keywords: "movies, recommendations, AI, cinema, films",
+  openGraph: {
+    title: "CineCurator | AI-Powered Movie Recommendations",
+    description:
+      "Discover your next cinematic masterpiece with AI-powered recommendations based on the movies you love.",
+    images: [{ url: "/banner.png", width: 1200, height: 480, alt: "CineCurator Banner" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CineCurator | AI-Powered Movie Recommendations",
+    description:
+      "Discover your next cinematic masterpiece with AI-powered recommendations based on the movies you love.",
+    images: ["/banner.png"],
+  },
 };
 
 export default function RootLayout({

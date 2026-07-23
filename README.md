@@ -1,5 +1,9 @@
 <div align="center">
 
+  <img src="public/screenshots/banner.png" alt="CineCurator Banner" width="100%" />
+
+  <br /><br />
+
   <h1>🎬 CineCurator</h1>
   <p><strong>Next-Generation AI Movie Discovery Engine & Recommendation Platform</strong></p>
 
