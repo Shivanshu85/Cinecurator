@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { resolveYouTubeKey, openYouTubeSearchFallback } from "@/services/youtube";
 import { findTMDBByImdbId } from "@/services/tmdb";
 
@@ -25,6 +26,11 @@ export function TrailerProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [videoKey, setVideoKey] = useState<string | null>(null);
   const [activeTitle, setActiveTitle] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const closeTrailer = useCallback(() => {
     setIsOpen(false);
@@ -90,36 +96,36 @@ export function TrailerProvider({ children }: { children: React.ReactNode }) {
     <TrailerContext.Provider value={{ openTrailer, closeTrailer, isLoading, isOpen }}>
       {children}
 
-      {/* ─── GLOBAL CINEMATIC TRAILER MODAL ─── */}
-      {isOpen && videoKey && (
+      {/* ─── GLOBAL CINEMATIC TRAILER MODAL (PORTAL TO DOCUMENT.BODY) ─── */}
+      {isOpen && videoKey && mounted && createPortal(
         <div
           className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/90 backdrop-blur-xl transition-all duration-300"
         >
-          {/* Centered 16:9 Player Wrapper with Thick White Border & Strongly Rounded Corners */}
-          <div className="relative w-full max-w-4xl max-h-[75vh] flex flex-col items-end">
-            
-            {/* Top-Right Circular X Close Button (Positioned safely above/outside iframe) */}
+          {/* SINGLE RESPONSIVE TRAILER BOX WITH THICK WHITE BORDER, ROUNDED CORNERS & INSIDE X BUTTON */}
+          <div
+            className="relative w-full max-w-4xl max-h-[80vh] aspect-video rounded-2xl md:rounded-3xl border-4 border-white shadow-2xl shadow-black/95 overflow-hidden bg-black flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top-Right Circular X Close Button (Positioned safely inside the top-right corner of the box) */}
             <button
               onClick={closeTrailer}
               aria-label="Close trailer"
-              className="mb-3 bg-white/10 hover:bg-[#e50914] text-white hover:scale-110 active:scale-95 rounded-full p-2.5 flex items-center justify-center transition-all border-2 border-white/80 shadow-2xl cursor-pointer group"
+              className="absolute top-3 right-3 md:top-4 md:right-4 z-50 bg-black/70 hover:bg-[#e50914] text-white hover:scale-110 active:scale-95 rounded-full p-2 md:p-2.5 flex items-center justify-center transition-all border-2 border-white/80 shadow-lg cursor-pointer group"
             >
-              <span className="material-symbols-outlined text-xl md:text-2xl font-bold">close</span>
+              <span className="material-symbols-outlined text-lg md:text-xl font-bold">close</span>
             </button>
 
-            {/* 16:9 Responsive Video Container */}
-            <div className="relative w-full aspect-video rounded-2xl md:rounded-3xl border-4 border-white shadow-2xl shadow-black/95 overflow-hidden bg-black">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${videoKey}?autoplay=1&enablejsapi=1`}
-                title={`${activeTitle} Trailer`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="w-full h-full border-0 rounded-xl"
-              />
-            </div>
-
+            {/* YouTube Iframe Embed */}
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${videoKey}?autoplay=1&enablejsapi=1`}
+              title={`${activeTitle} Trailer`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="w-full h-full border-0"
+            />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </TrailerContext.Provider>
   );
