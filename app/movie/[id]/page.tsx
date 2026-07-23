@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useMovie } from "@/hooks/queries/useMovie";
 import { useAuth } from "@/hooks/useAuth";
 import { useLibrary, useAddToLibrary, useRemoveFromLibrary } from "@/hooks/queries/useLibrary";
+import { getTrailerUrl } from "@/services/youtube";
 
 export default function MoviePage({ params }: { params: { id: string } }) {
   const decodedId = decodeURIComponent(params.id);
@@ -17,6 +19,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
   const isInLibrary = library.some((item) => item.imdb_id === decodedId);
 
   const { data: movie, isLoading, error } = useMovie(decodedId);
+  const [loadingTrailer, setLoadingTrailer] = useState(false);
 
   if (isLoading) {
     return (
@@ -36,6 +39,14 @@ export default function MoviePage({ params }: { params: { id: string } }) {
       </div>
     );
   }
+
+  const handleWatchTrailer = async () => {
+    if (!movie) return;
+    setLoadingTrailer(true);
+    const url = await getTrailerUrl(movie.title, movie.year);
+    setLoadingTrailer(false);
+    if (url) window.open(url, "_blank");
+  };
 
   const handleLibraryToggle = () => {
     if (!user) {
@@ -86,8 +97,12 @@ export default function MoviePage({ params }: { params: { id: string } }) {
             {movie.title}
           </h1>
           <div className="flex flex-col md:flex-row gap-4">
-            <button className="bg-[#e50914] text-[#fff7f6] px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all duration-200">
-              Watch Trailer
+            <button 
+              onClick={handleWatchTrailer}
+              disabled={loadingTrailer}
+              className="bg-[#e50914] text-[#fff7f6] px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all duration-200 disabled:opacity-70"
+            >
+              {loadingTrailer ? "Loading..." : "Watch Trailer"}
             </button>
             <button 
               onClick={handleLibraryToggle}
