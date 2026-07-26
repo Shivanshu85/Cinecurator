@@ -126,14 +126,11 @@ body.trailer-open footer {
   z-index: 0 !important;
   transform: none !important;
   filter: none !important;
-  backdrop-filter: none !important;
   isolation: auto !important;
 }
 
-body.trailer-open [class*="z-"],
-body.trailer-open [class*="blur-"],
-body.trailer-open [class*="backdrop-blur"] {
-  z-index: 0 !important;
+body.trailer-open [class*="blur-"]:not(#trailer-modal-portal):not(.trailer-backdrop),
+body.trailer-open [class*="backdrop-blur"]:not(#trailer-modal-portal):not(.trailer-backdrop) {
   filter: none !important;
   backdrop-filter: none !important;
 }
