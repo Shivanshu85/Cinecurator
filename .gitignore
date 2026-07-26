@@ -78,7 +78,4 @@ htmlcov/
 .gemini/
 brain/
 
-# Internal Developer Notes & Prototypes
-DEPLOYMENT.md
-VERCEL_DEPLOYMENT_CHECKLIST.md
-stitch_movie_recommender/
+

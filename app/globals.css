@@ -116,3 +116,24 @@ body {
 .fade-in {
   animation: fadeIn 0.5s ease forwards;
 }
+
+/* ─── TRAILER OPEN MODAL STACKING ISOLATION ─── */
+body.trailer-open nav,
+body.trailer-open header,
+body.trailer-open main,
+body.trailer-open section,
+body.trailer-open footer {
+  z-index: 0 !important;
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  isolation: auto !important;
+}
+
+body.trailer-open [class*="z-"],
+body.trailer-open [class*="blur-"],
+body.trailer-open [class*="backdrop-blur"] {
+  z-index: 0 !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
