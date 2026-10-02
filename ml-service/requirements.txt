@@ -6,4 +6,4 @@ numpy>=2.5.3
 httpx>=0.28
 pydantic>=2.13.5
 python-multipart>=0.0.20
-requests>=2.32
+requests>=2.34.2
