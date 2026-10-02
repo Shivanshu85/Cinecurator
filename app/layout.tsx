@@ -39,11 +39,11 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
         />
       </head>
-      <body className="bg-background text-on-surface font-body selection:bg-primary-container selection:text-white overflow-x-hidden">
+      <body className="bg-background text-on-surface font-body selection:bg-primary-container selection:text-white overflow-x-hidden relative">
         <QueryProvider>
           <TrailerProvider>
             <Navbar />
-            <main className="min-h-screen">{children}</main>
+            <main className="min-h-screen relative isolate z-1">{children}</main>
             <Footer />
           </TrailerProvider>
         </QueryProvider>
