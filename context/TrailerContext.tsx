@@ -70,13 +70,15 @@ export function TrailerProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll and set trailer-open class when modal is open
   useEffect(() => {
     if (isOpen) {
       const originalStyle = window.getComputedStyle(document.body).overflow;
       document.body.style.overflow = "hidden";
+      document.body.classList.add("trailer-open");
       return () => {
         document.body.style.overflow = originalStyle;
+        document.body.classList.remove("trailer-open");
       };
     }
   }, [isOpen]);
@@ -99,18 +101,26 @@ export function TrailerProvider({ children }: { children: React.ReactNode }) {
       {/* ─── GLOBAL CINEMATIC TRAILER MODAL (PORTAL TO DOCUMENT.BODY) ─── */}
       {isOpen && videoKey && mounted && createPortal(
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/90 backdrop-blur-xl transition-all duration-300"
+          id="trailer-modal-portal"
+          style={{ isolation: "isolate" }}
+          className="fixed inset-0 z-[2147483647] flex items-center justify-center p-4 sm:p-6 md:p-10 pointer-events-auto transition-all duration-300"
         >
-          {/* SINGLE RESPONSIVE TRAILER BOX WITH THICK WHITE BORDER, ROUNDED CORNERS & INSIDE X BUTTON */}
+          {/* DEDICATED FROSTED GLASS BACKDROP LAYER */}
           <div
-            className="relative w-full max-w-4xl max-h-[80vh] aspect-video rounded-2xl md:rounded-3xl border-4 border-white shadow-2xl shadow-black/95 overflow-hidden bg-black flex flex-col"
+            className="trailer-backdrop absolute inset-0 bg-black/65 backdrop-blur-2xl transition-opacity duration-300"
+            onClick={closeTrailer}
+          />
+
+          {/* SINGLE RESPONSIVE TRAILER CONTAINER BOX WITH THICK WHITE BORDER, ROUNDED CORNERS & INSIDE X BUTTON */}
+          <div
+            className="relative z-10 w-full max-w-4xl max-h-[80vh] aspect-video rounded-2xl md:rounded-3xl border-4 border-white shadow-[0_0_80px_rgba(0,0,0,0.95)] overflow-hidden bg-black flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top-Right Circular X Close Button (Positioned safely inside the top-right corner of the box) */}
             <button
               onClick={closeTrailer}
               aria-label="Close trailer"
-              className="absolute top-3 right-3 md:top-4 md:right-4 z-50 bg-black/70 hover:bg-[#e50914] text-white hover:scale-110 active:scale-95 rounded-full p-2 md:p-2.5 flex items-center justify-center transition-all border-2 border-white/80 shadow-lg cursor-pointer group"
+              className="absolute top-3 right-3 md:top-4 md:right-4 z-50 bg-black/90 hover:bg-[#e50914] text-white hover:scale-110 active:scale-95 rounded-full w-9 h-9 md:w-10 md:h-10 flex items-center justify-center transition-all border-2 border-white shadow-2xl cursor-pointer pointer-events-auto"
             >
               <span className="material-symbols-outlined text-lg md:text-xl font-bold">close</span>
             </button>
