@@ -116,3 +116,36 @@ body {
 .fade-in {
   animation: fadeIn 0.5s ease forwards;
 }
+
+/* ─── TRAILER OPEN MODAL STACKING ISOLATION ─── */
+body.trailer-open nav,
+body.trailer-open header,
+body.trailer-open main,
+body.trailer-open section,
+body.trailer-open footer,
+body.trailer-open div:not(#trailer-modal-portal):not(#trailer-modal-portal *) {
+  z-index: 0 !important;
+  transform: none !important;
+  filter: none !important;
+  isolation: auto !important;
+}
+
+body.trailer-open img:not(#trailer-modal-portal *),
+body.trailer-open h1:not(#trailer-modal-portal *),
+body.trailer-open h2:not(#trailer-modal-portal *),
+body.trailer-open h3:not(#trailer-modal-portal *),
+body.trailer-open p:not(#trailer-modal-portal *),
+body.trailer-open button:not(#trailer-modal-portal *),
+body.trailer-open span:not(#trailer-modal-portal *) {
+  position: static !important;
+  z-index: 0 !important;
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+body.trailer-open [class*="blur-"]:not(#trailer-modal-portal):not(.trailer-backdrop),
+body.trailer-open [class*="backdrop-blur"]:not(#trailer-modal-portal):not(.trailer-backdrop) {
+  filter: none !important;
+  backdrop-filter: none !important;
+}
